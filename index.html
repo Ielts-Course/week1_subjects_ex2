@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stage 3: Fill in the blanks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            text-align: center;
+        }
+        .sentence-container {
+            background: #fff;
+            padding: 1rem;
+            margin: 1rem auto;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .sentence {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        select {
+            font-size: 1rem;
+            padding: 0.3rem;
+            margin: 0 0.5rem;
+        }
+        .translation {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+        #submit {
+            display: block;
+            margin: 2rem auto;
+            padding: 0.5rem 1rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+  <div class="header" style="justify-content:center; text-align:center; display:flex; align-items:center; gap:16px; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:12px;">
+    <img src="LOGO.png" alt="Logo" style="height:56px; width:auto;" />
+    <div class="titleblock" style="font-weight:700; line-height:1.2; font-size:1.4em;">
+      教育部 - 出国人员培训部
+      <small style="display:block; font-weight:500; color:#555; margin-top:4px;">第1周 • 词汇练习</small>
+    </div>
+  
+
+  
+
+  </div>
+
+    
+    
+  <p id="instruction" style="text-align:center; font-style:italic; font-size:1rem; color:#444; margin:1rem 0;">
+    Choose the most suitable word to complete each sentence. Clues are provided in Chinese.
+  </p>
+<div class="sentence-container" id="exercise"></div>
+    <button id="submit">Submit Answers</button>
+<div id="score-report" style="text-align:center; font-size:1.2rem; margin-top:1rem;"></div>
+<div id="right-answers" style="max-width:800px; margin:1rem auto; font-size:1rem; line-height:1.5;"></div>
+
+    <script>
+        const data = [
+            ["Math", "useful", "有用的", "I can use it to plan my budget."],
+            ["Undergraduate study", "fun", "有趣的", "I can join many clubs."],
+            ["Physical education", "tiring", "累人的", "I need to rest after class."],
+            ["Math", "confusing", "令人困惑的", "I don’t understand some of the problems."],
+            ["History", "interesting", "有趣的", "I love hearing the stories about our country’s past."],
+            ["Literature", "inspiring", "鼓舞人心的", "It makes me want to write."],
+            ["Physics", "challenging", "有挑战性的", "Some ideas are hard to understand."],
+            ["An exchange program", "fascinating", "迷人的", "I can see how people live in other countries."],
+            ["Graphic design", "practical", "实用的", "I can use it to make posters."],
+            ["Graduate research", "complex", "复杂的", "The work has many small parts."],
+            ["Business", "innovative", "创新的", "People come up with new product ideas to sell."],
+            ["Biology", "motivating", "激励人的", "It makes me want to protect animals."]
+        ];
+
+        const adjectives = [...new Set(data.map(d => d[1]))];
+        const shuffled = data.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+        const container = document.getElementById("exercise");
+
+        shuffled.forEach((item, index) => {
+            const [subject, correct, translation, followUp] = item;
+            const options = [correct, ...adjectives.filter(adj => adj !== correct).sort(() => 0.5 - Math.random()).slice(0, 3)];
+            options.sort(() => 0.5 - Math.random());
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "sentence";
+            wrapper.innerHTML = `
+                ${subject} is 
+                <select data-answer="${correct}" data-subject="${subject}" data-followup="${followUp}">
+                    <option value="">--choose--</option>
+                    ${options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+                .</select> ${followUp}
+                <div class="translation">(${translation})</div>
+            `;
+            container.appendChild(wrapper);
+        });
+
+        
+
+document.getElementById("submit").onclick = () => {
+    const selects = document.querySelectorAll("select");
+    let correctCount = 0;
+    const missed = [];
+
+    selects.forEach(sel => {
+        sel.disabled = true;
+        const userAnswer = sel.value;
+        const correct = sel.dataset.answer;
+        const isCorrect = userAnswer === correct;
+        sel.className = isCorrect ? "correct" : "incorrect";
+        if (isCorrect) {
+            correctCount++;
+        } else {
+            const subj = sel.dataset.subject;
+            const follow = sel.dataset.followup;
+            missed.push(`正确句子：${subj} is ${correct}. ${follow}`);
+        }
+    });
+
+    const scoreReport = document.getElementById("score-report");
+    const total = selects.length;
+    const percent = Math.round((correctCount / total) * 100);
+    scoreReport.textContent = `${correctCount}/${total} correct – ${percent}%`;
+
+    const feedbackDiv = document.getElementById("right-answers");
+    if (missed.length) {
+        feedbackDiv.innerHTML = missed.map(s => `<div>• ${s}</div>`).join("");
+    } else {
+        feedbackDiv.innerHTML = "<div>全部正确！做得好！</div>";
+    }
+};
+
+
+    </script>
+
+  <footer style="text-align:center; margin-top:24px; color:#666; font-size:13px;">
+    ©2025 Dr. Carlos Cardenas • 教育管理学博士
+  </footer>
+</div>
+
+</body>
+</html>
