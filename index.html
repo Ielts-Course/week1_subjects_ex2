@@ -17,24 +17,14 @@
     html,body{height:100%}
     body{margin:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:var(--fs-body); line-height:1.55; padding: clamp(12px, 3vw, 24px);}
 
-    .container{max-width:900px; margin:auto}
-    .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding: clamp(14px, 3vw, 20px);}
-
-    /* Header: center the row (logo + title) */
+    .container{max-width:min(900px, 100%); margin:auto; padding:0;}argin.card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding: clamp(14px, 3vw, 20px); width:100%;}lamp(1/* Header: center the row (logo + title) */
     .header{display:flex; justify-content:center; align-items:center; gap:var(--gap); padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #eee; text-align:center}
     .header img{height:56px; width:auto; max-width:36vw}
     .titleblock{font-weight:800; line-height:1.2; font-size:var(--fs-h)}
     .titleblock small{display:block; font-weight:600; color:#555; margin-top:4px; font-size:clamp(13px,1.6vw,15px)}
-
-    /* Instruction */
-    #instruction{ text-align:center; font-style:italic; color:#444; margin: .6rem 0 1rem; }
-
-    /* Sentences */
+    .header img, .card img{max-width:100%; height:auto;}  /* Sentences */
     .sentence-container{background:var(--card); padding:0; margin:0 auto; max-width:900px;}
-    .sentence{padding: .8rem 1rem; margin: .4rem auto; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.05)}
-
-    /* Selects: make tap-friendly */
-    select{min-height:var(--tap-target); font-size:1em; padding:.35rem .6rem; margin:0 .35rem; border-radius:10px; border:1px solid #bbb; background:#f7f8ff}
+    .sentence{padding: .8rem 1r.sentence-container{background:var(--card); padding:0; margin:0 auto; max-width:100%;}0,0,0.sentence{padding: .8rem 1rem; margin: .5rem auto; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); display:flex; flex-wrap:wrap; align-items:center; column-gap:.4rem; row-gap:.35rem; word-break:break-word; overflow-wrap:anywhere;}rgin:0 .35rem; border-radius:10px; border:1px solid #bbb; background:#f7f8ff}
     select:focus{outline:3px solid rgba(47,111,235,.25)}
     .translation{color:var(--muted); font-size:.9em; margin-top:.25rem}
 
