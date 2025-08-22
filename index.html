@@ -1,162 +1,158 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Stage 3: Fill in the blanks</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 2rem;
-            background-color: #f9f9f9;
-        }
-        h2 {
-            text-align: center;
-        }
-        .sentence-container {
-            background: #fff;
-            padding: 1rem;
-            margin: 1rem auto;
-            max-width: 800px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .sentence {
-            margin-bottom: 1.2rem;
-            font-size: 1.1rem;
-        }
-        select {
-            font-size: 1rem;
-            padding: 0.3rem;
-            margin: 0 0.5rem;
-        }
-        .translation {
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 0.2rem;
-        }
-        #submit {
-            display: block;
-            margin: 2rem auto;
-            padding: 0.5rem 1rem;
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .correct {
-            color: green;
-            font-weight: bold;
-        }
-        .incorrect {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Stage 3: Fill in the blanks — Mobile Optimized</title>
+  <style>
+    :root{
+      --bg:#f9f9f9;--card:#fff;--text:#222;--muted:#666;--brand:#2f6feb;
+      --radius:12px;--shadow:0 4px 12px rgba(0,0,0,.06);
+      --gap:12px;--gap-lg:16px;
+      --fs-body:clamp(16px, 1.9vw, 18px);
+      --fs-h:clamp(18px, 2.4vw, 24px);
+      --tap-target:clamp(44px, 9vw, 52px);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size:var(--fs-body); line-height:1.55; padding: clamp(12px, 3vw, 24px);}
+
+    .container{max-width:900px; margin:auto}
+    .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding: clamp(14px, 3vw, 20px);}
+
+    /* Header: center the row (logo + title) */
+    .header{display:flex; justify-content:center; align-items:center; gap:var(--gap); padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #eee; text-align:center}
+    .header img{height:56px; width:auto; max-width:36vw}
+    .titleblock{font-weight:800; line-height:1.2; font-size:var(--fs-h)}
+    .titleblock small{display:block; font-weight:600; color:#555; margin-top:4px; font-size:clamp(13px,1.6vw,15px)}
+
+    /* Instruction */
+    #instruction{ text-align:center; font-style:italic; color:#444; margin: .6rem 0 1rem; }
+
+    /* Sentences */
+    .sentence-container{background:var(--card); padding:0; margin:0 auto; max-width:900px;}
+    .sentence{padding: .8rem 1rem; margin: .4rem auto; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.05)}
+
+    /* Selects: make tap-friendly */
+    select{min-height:var(--tap-target); font-size:1em; padding:.35rem .6rem; margin:0 .35rem; border-radius:10px; border:1px solid #bbb; background:#f7f8ff}
+    select:focus{outline:3px solid rgba(47,111,235,.25)}
+    .translation{color:var(--muted); font-size:.9em; margin-top:.25rem}
+
+    /* Submit button */
+    #submit{display:block; margin:1rem auto; padding:.6rem 1rem; min-height:var(--tap-target); font-size:1.05em; border:0; border-radius:12px; cursor:pointer; background:var(--brand); color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+    .correct{color:green; font-weight:700}
+    .incorrect{color:#e53935; font-weight:700}
+
+    footer{text-align:center; margin-top:18px; color:#666; font-size:13px}
+
+    /* Small screens */
+    @media (max-width:560px){
+      .sentence{padding:.9rem .85rem}
+      /* keep selects readable and easy to tap */
+      select{display:inline-block; min-width:52vw}
+      /* make the follow-up text wrap nicely after the select */
+      .sentence select + text{display:inline}
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="header" style="justify-content:center; text-align:center; display:flex; align-items:center; gap:16px; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:12px;">
-    <img src="LOGO.png" alt="Logo" style="height:56px; width:auto;" />
-    <div class="titleblock" style="font-weight:700; line-height:1.2; font-size:1.4em;">
-      教育部 - 出国人员培训部
-      <small style="display:block; font-weight:500; color:#555; margin-top:4px;">第1周 • 词汇练习</small>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <img src="LOGO.png" alt="Logo" />
+        <div class="titleblock">教育部 - 出国人员培训部<small>第1周 • 词汇练习</small></div>
+      </div>
+
+      <p id="instruction">Choose the most suitable word to complete each sentence. Clues are provided in Chinese.</p>
+
+      <div class="sentence-container" id="exercise"></div>
+      <button id="submit" type="button">Submit Answers</button>
+      <div id="score-report" style="text-align:center; font-size:1.05rem; margin-top:.8rem;"></div>
+      <div id="right-answers" style="max-width:900px; margin: .6rem auto 0; font-size:1rem; line-height:1.5;"></div>
+
+      <footer>©2025 Dr. Carlos Cardenas • 教育管理学博士</footer>
     </div>
-  
-
-  
-
   </div>
 
-    
-    
-  <p id="instruction" style="text-align:center; font-style:italic; font-size:1rem; color:#444; margin:1rem 0;">
-    Choose the most suitable word to complete each sentence. Clues are provided in Chinese.
-  </p>
-<div class="sentence-container" id="exercise"></div>
-    <button id="submit">Submit Answers</button>
-<div id="score-report" style="text-align:center; font-size:1.2rem; margin-top:1rem;"></div>
-<div id="right-answers" style="max-width:800px; margin:1rem auto; font-size:1rem; line-height:1.5;"></div>
+  <script>
+    const data = [
+      ["Math", "useful", "有用的", "I can use it to plan my budget."],
+      ["Undergraduate study", "fun", "有趣的", "I can join many clubs."],
+      ["Physical education", "tiring", "累人的", "I need to rest after class."],
+      ["Math", "confusing", "令人困惑的", "I don’t understand some of the problems."],
+      ["History", "interesting", "有趣的", "I love hearing the stories about our country’s past."],
+      ["Literature", "inspiring", "鼓舞人心的", "It makes me want to write."],
+      ["Physics", "challenging", "有挑战性的", "Some ideas are hard to understand."],
+      ["An exchange program", "fascinating", "迷人的", "I can see how people live in other countries."],
+      ["Graphic design", "practical", "实用的", "I can use it to make posters."],
+      ["Graduate research", "complex", "复杂的", "The work has many small parts."],
+      ["Business", "innovative", "创新的", "People come up with new product ideas to sell."],
+      ["Biology", "motivating", "激励人的", "It makes me want to protect animals."]
+    ];
 
-    <script>
-        const data = [
-            ["Math", "useful", "有用的", "I can use it to plan my budget."],
-            ["Undergraduate study", "fun", "有趣的", "I can join many clubs."],
-            ["Physical education", "tiring", "累人的", "I need to rest after class."],
-            ["Math", "confusing", "令人困惑的", "I don’t understand some of the problems."],
-            ["History", "interesting", "有趣的", "I love hearing the stories about our country’s past."],
-            ["Literature", "inspiring", "鼓舞人心的", "It makes me want to write."],
-            ["Physics", "challenging", "有挑战性的", "Some ideas are hard to understand."],
-            ["An exchange program", "fascinating", "迷人的", "I can see how people live in other countries."],
-            ["Graphic design", "practical", "实用的", "I can use it to make posters."],
-            ["Graduate research", "complex", "复杂的", "The work has many small parts."],
-            ["Business", "innovative", "创新的", "People come up with new product ideas to sell."],
-            ["Biology", "motivating", "激励人的", "It makes me want to protect animals."]
-        ];
+    const adjectives = [...new Set(data.map(d => d[1]))];
+    const shuffled = data.sort(() => 0.5 - Math.random()).slice(0, 5);
 
-        const adjectives = [...new Set(data.map(d => d[1]))];
-        const shuffled = data.sort(() => 0.5 - Math.random()).slice(0, 5);
+    const container = document.getElementById("exercise");
 
-        const container = document.getElementById("exercise");
+    shuffled.forEach((item, index) => {
+      const [subject, correct, translation, followUp] = item;
+      const options = [correct, ...adjectives.filter(adj => adj !== correct).sort(() => 0.5 - Math.random()).slice(0, 3)];
+      options.sort(() => 0.5 - Math.random());
 
-        shuffled.forEach((item, index) => {
-            const [subject, correct, translation, followUp] = item;
-            const options = [correct, ...adjectives.filter(adj => adj !== correct).sort(() => 0.5 - Math.random()).slice(0, 3)];
-            options.sort(() => 0.5 - Math.random());
+      const wrapper = document.createElement("div");
+      wrapper.className = "sentence";
 
-            const wrapper = document.createElement("div");
-            wrapper.className = "sentence";
-            wrapper.innerHTML = `
-                ${subject} is 
-                <select data-answer="${correct}" data-subject="${subject}" data-followup="${followUp}">
-                    <option value="">--choose--</option>
-                    ${options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
-                .</select> ${followUp}
-                <div class="translation">(${translation})</div>
-            `;
-            container.appendChild(wrapper);
-        });
+      const selId = `sel-${index}`;
+      wrapper.innerHTML = `
+        <label for="${selId}" style="position:absolute; left:-9999px;">Choose adjective for ${subject}</label>
+        ${subject} is 
+        <select id="${selId}" aria-label="Choose adjective for ${subject}" data-answer="${correct}" data-subject="${subject}" data-followup="${followUp}">
+          <option value="">— choose —</option>
+          ${options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+        </select>
+        . ${followUp}
+        <div class="translation">(${translation})</div>
+      `;
+      container.appendChild(wrapper);
+    });
 
-        
+    document.getElementById("submit").onclick = () => {
+      const selects = document.querySelectorAll("select");
+      let correctCount = 0;
+      const missed = [];
 
-document.getElementById("submit").onclick = () => {
-    const selects = document.querySelectorAll("select");
-    let correctCount = 0;
-    const missed = [];
-
-    selects.forEach(sel => {
-        sel.disabled = true;
+      selects.forEach(sel => {
+        sel.disabled = true; // lock after submit (prevents accidental changes on mobile)
         const userAnswer = sel.value;
         const correct = sel.dataset.answer;
         const isCorrect = userAnswer === correct;
         sel.className = isCorrect ? "correct" : "incorrect";
         if (isCorrect) {
-            correctCount++;
+          correctCount++;
         } else {
-            const subj = sel.dataset.subject;
-            const follow = sel.dataset.followup;
-            missed.push(`正确句子：${subj} is ${correct}. ${follow}`);
+          const subj = sel.dataset.subject;
+          const follow = sel.dataset.followup;
+          missed.push(`正确句子：${subj} is ${correct}. ${follow}`);
         }
-    });
+      });
 
-    const scoreReport = document.getElementById("score-report");
-    const total = selects.length;
-    const percent = Math.round((correctCount / total) * 100);
-    scoreReport.textContent = `${correctCount}/${total} correct – ${percent}%`;
+      const scoreReport = document.getElementById("score-report");
+      const total = selects.length;
+      const percent = Math.round((correctCount / total) * 100);
+      scoreReport.textContent = `${correctCount}/${total} correct – ${percent}%`;
 
-    const feedbackDiv = document.getElementById("right-answers");
-    if (missed.length) {
+      const feedbackDiv = document.getElementById("right-answers");
+      if (missed.length) {
         feedbackDiv.innerHTML = missed.map(s => `<div>• ${s}</div>`).join("");
-    } else {
+      } else {
         feedbackDiv.innerHTML = "<div>全部正确！做得好！</div>";
-    }
-};
-
-
-    </script>
-
-  <footer style="text-align:center; margin-top:24px; color:#666; font-size:13px;">
-    ©2025 Dr. Carlos Cardenas • 教育管理学博士
-  </footer>
-</div>
-
+      }
+    };
+  </script>
 </body>
 </html>
