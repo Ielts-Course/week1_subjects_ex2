@@ -25,17 +25,17 @@
     .header img{height:clamp(22px, 6vw, 32px); width:auto; max-width:48px}
     .titleblock{font-weight:800; line-height:1.2; font-size:var(--fs-h); flex:1 1 auto; min-width:0;}
     .titleblock small{display:block; font-weight:600; color:#555; margin-top:4px; font-size:clamp(13px,1.6vw,15px)}
-    .header img, .card img{max-width:100%; height:auto;}
+    .card img{max-width:100%; height:auto;} /* keep header img controlled by its own rule */
 
     /* Instruction */
     #instruction{ text-align:center; font-style:italic; color:#444; margin: .6rem 0 1rem; padding:0 .25rem; }
 
     /* Sentences */
     .sentence-container{background:var(--card); padding:0; margin:0 auto; width:100%;}
-    .sentence{padding:.8rem 1rem; margin:.5rem auto; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); display:flex; flex-wrap:wrap; align-items:baseline; column-gap:.3rem; row-gap:.3rem; word-break:break-word; overflow-wrap:anywhere;}
+    .sentence{padding:.8rem 1rem; margin:.5rem auto; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); display:block; word-break:break-word; overflow-wrap:anywhere;}
 
     /* Selects */
-    select{display:inline-block; min-height:var(--tap-target); font-size:1em; padding:.3rem .5rem; margin:0 .2rem; border-radius:10px; border:1px solid #bbb; background:#f7f8ff; width:auto; min-width:12ch; max-width:20ch; vertical-align:baseline;}
+    select{display:inline-flex; min-height:var(--tap-target); font-size:1em; padding:.3rem .5rem; margin:0 .2rem; border-radius:10px; border:1px solid #bbb; background:#f7f8ff; width:auto; min-width:10ch; max-width:18ch; vertical-align:baseline;}
     select:focus{outline:3px solid rgba(47,111,235,.25)}
     .translation{color:var(--muted); font-size:.9em; margin-top:.25rem}
 
@@ -48,8 +48,20 @@
     footer{text-align:center; margin-top:18px; color:#666; font-size:13px}
 
     /* Small screens */
+    @media (min-width:600px) and (max-width:1024px){
+      /* Tablet/iPad tweaks: keep logo modest */
+      .header img{height:36px; max-width:48px}
+      .header{gap:10px}
+    }
+
     @media (max-width:600px){
       body{padding:12px}
+      .card{border-radius:0; box-shadow:none; padding:14px;}
+      .header{gap:8px}
+      .header img{height:24px; max-width:36px}
+      .sentence{padding:.85rem .8rem}
+      select{display:inline-flex; width:auto; min-width:9ch; max-width:16ch; margin:0 .15rem; font-size:.95em}
+    }
       .card{border-radius:0; box-shadow:none; padding:14px;}
       .header{gap:8px}
       .header img{height:24px; max-width:36px}
@@ -120,16 +132,36 @@
       wrapper.className = "sentence";
 
       const selId = `sel-${index}`;
-      wrapper.innerHTML = `
-        <label for="${selId}" style="position:absolute; left:-9999px;">Choose adjective for ${subject}</label>
-        ${subject} is 
-        <select id="${selId}" aria-label="Choose adjective for ${subject}" data-answer="${correct}" data-subject="${subject}" data-followup="${followUp}">
-          <option value="">— choose —</option>
-          ${options.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
-        </select>
-        . ${followUp}
-        <div class="translation">(${translation})</div>
-      `;
+      // Build inline DOM nodes to avoid stray whitespace causing line breaks
+      const label = document.createElement('label');
+      label.setAttribute('for', selId);
+      label.style.position = 'absolute';
+      label.style.left = '-9999px';
+      label.textContent = `Choose adjective for ${subject}`;
+
+      const before = document.createTextNode(`${subject} is `);
+
+      const selectEl = document.createElement('select');
+      selectEl.id = selId;
+      selectEl.setAttribute('aria-label', `Choose adjective for ${subject}`);
+      selectEl.dataset.answer = correct;
+      selectEl.dataset.subject = subject;
+      selectEl.dataset.followup = followUp;
+
+      const optBlank = document.createElement('option');
+      optBlank.value = '';
+      optBlank.textContent = '— choose —';
+      selectEl.appendChild(optBlank);
+
+      options.forEach(opt => { const o=document.createElement('option'); o.value=opt; o.textContent=opt; selectEl.appendChild(o); });
+
+      const after = document.createTextNode(`. ${followUp}`);
+
+      const trans = document.createElement('div');
+      trans.className = 'translation';
+      trans.textContent = `(${translation})`;
+
+      wrapper.append(label, before, selectEl, after, trans);
       container.appendChild(wrapper);
     });
 
