@@ -20,10 +20,18 @@
     .container{width:100%; margin:0 auto; padding:0;}
     .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding: clamp(14px, 3vw, 20px); width:100%;}
 
-    /* Header */
-    .header{display:flex; justify-content:center; align-items:center; gap:12px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #eee; text-align:center; flex-wrap:wrap;}
-    .header img { height: clamp(56px, 10vw, 104px); width: auto; max-width: none; }
-    .titleblock{font-weight:800; line-height:1.2; font-size:var(--fs-h); flex:1 1 0; min-width:0;}
+    /* Header: IELTS-style stable layout */
+    .header{
+      display:flex; align-items:center; justify-content:center; gap:12px;
+      padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #eee;
+      text-align:center; flex-wrap:nowrap;
+    }
+    .header img{
+      height:48px; width:48px; object-fit:contain;
+    }
+    .titleblock{
+      font-weight:800; line-height:1.2; font-size:20px; white-space:normal;
+    }
     .titleblock small{display:block; font-weight:600; color:#555; margin-top:4px; font-size:clamp(13px,1.6vw,15px)}
     .card img{max-width:100%; height:auto;} /* keep header img controlled by its own rule */
 
@@ -36,7 +44,6 @@
 
     /* Selects */
     select{display:inline-flex; min-height:var(--tap-target); font-size:1em; padding:.28rem .45rem; margin:0 .15rem; border-radius:10px; border:1px solid #bbb; background:#f7f8ff; width:auto; min-width:10ch; max-width:18ch; vertical-align:baseline;} 
-    /* prevent breaks around the select on all devices */
     .nowrap-group{display:inline-flex; align-items:baseline; gap:.2rem; white-space:nowrap;} 
     .nowrap-group select{margin:0 .15rem;} 
     select:focus{outline:3px solid rgba(47,111,235,.25)}
@@ -50,51 +57,22 @@
 
     footer{text-align:center; margin-top:18px; color:#666; font-size:13px}
 
-    /* Small screens */
-    @media (min-width:600px) and (max-width:1024px){
-      .header img{height:clamp(56px, 10vw, 104px); width:auto; max-width:none; object-fit:contain;}
-      .header{gap:12px; flex-wrap:wrap}
-    }
-      .header{gap:10px}
-    }
-      .header{gap:10px}
-    }
-
+    /* Phones */
     @media (max-width:600px){
       body{padding:12px}
       .card{border-radius:0; box-shadow:none; padding:14px;}
-      .header{gap:10px; flex-wrap:wrap}
-      .header img{height:64px}
+      .header{gap:10px}
+      .header img{height:40px; width:40px}
+      .titleblock{font-size:18px}
       .sentence{padding:.85rem .8rem}
       select{display:inline-flex; width:auto; min-width:9ch; max-width:16ch; margin:0 .15rem; font-size:.95em}
     }
-      .card{border-radius:0; box-shadow:none; padding:14px;}
-      .header{gap:8px}
-      .header img{height:32px}
-      .sentence{padding:.85rem .8rem}
-      select{display:inline-flex; width:auto; min-width:9ch; max-width:16ch; margin:0 .15rem; font-size:.95em}
-    }
-      .card{border-radius:0; box-shadow:none; padding:14px;}
-      .header{gap:8px}
-      .header img{height:24px; max-width:36px}
-      .sentence{padding:.85rem .8rem}
-      select{display:inline-flex; width:auto; min-width:9ch; max-width:16ch; margin:0 .15rem; font-size:.95em}
-    }
-      .card{border-radius:0; box-shadow:none; padding:14px;}
-      .header{gap:8px}
-      .header img{height:24px; max-width:36px}
-      .sentence{padding:.85rem .8rem;}
-      /* Keep selects inline but compact on phones */
-      select{display:inline-block; width:auto; min-width:10ch; max-width:16ch; margin:0 .15rem; font-size:.95em}
-    }
-      .card{border-radius:0; box-shadow:none; padding:14px;}
-      .sentence{padding:.9rem .85rem;}
-      /* Keep selects inline but compact on phones */
-      select{display:inline-block; width:auto; min-width:12ch; max-width:22ch;}
-    }
-      .card{border-radius:0; box-shadow:none; padding:14px;}
-      .sentence{padding:.9rem .85rem; display:block;}
-      select{display:block; width:100%; margin:.4rem 0}
+
+    /* Tablets */
+    @media (min-width:600px) and (max-width:1024px){
+      .header{gap:12px}
+      .header img{height:56px; width:56px}
+      .titleblock{font-size:22px}
     }
 
     /* Respect reduced motion */
@@ -150,7 +128,6 @@
       wrapper.className = "sentence";
 
       const selId = `sel-${index}`;
-      // Build inline nodes and a no-wrap group around "... is [select]."
       const label = document.createElement('label');
       label.setAttribute('for', selId);
       label.style.position = 'absolute';
@@ -163,7 +140,7 @@
       const before = document.createElement('span');
       before.textContent = `${subject} is`;
 
-      const nbsp = document.createTextNode(' '); // non-breaking space
+      const nbsp = document.createTextNode('\u00A0');
 
       const selectEl = document.createElement('select');
       selectEl.id = selId;
@@ -201,7 +178,7 @@
       const missed = [];
 
       selects.forEach(sel => {
-        sel.disabled = true; // lock after submit
+        sel.disabled = true;
         const userAnswer = sel.value;
         const correct = sel.dataset.answer;
         const isCorrect = userAnswer === correct;
