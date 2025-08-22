@@ -21,9 +21,9 @@
     .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding: clamp(14px, 3vw, 20px); width:100%;}
 
     /* Header */
-    .header{display:flex; justify-content:center; align-items:center; gap:10px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #eee; text-align:center}
-    .header img { height: clamp(28px, 5vw, 52px); width: auto; max-width: none; }
-    .titleblock{font-weight:800; line-height:1.2; font-size:var(--fs-h); flex:1 1 auto; min-width:0;}
+    .header{display:flex; justify-content:center; align-items:center; gap:12px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #eee; text-align:center; flex-wrap:wrap;}
+    .header img { height: clamp(56px, 10vw, 104px); width: auto; max-width: none; }
+    .titleblock{font-weight:800; line-height:1.2; font-size:var(--fs-h); flex:1 1 0; min-width:0;}
     .titleblock small{display:block; font-weight:600; color:#555; margin-top:4px; font-size:clamp(13px,1.6vw,15px)}
     .card img{max-width:100%; height:auto;} /* keep header img controlled by its own rule */
 
@@ -52,7 +52,9 @@
 
     /* Small screens */
     @media (min-width:600px) and (max-width:1024px){
-      .header img{height:44px}
+      .header img{height:clamp(56px, 10vw, 104px); width:auto; max-width:none; object-fit:contain;}
+      .header{gap:12px; flex-wrap:wrap}
+    }
       .header{gap:10px}
     }
       .header{gap:10px}
@@ -60,6 +62,12 @@
 
     @media (max-width:600px){
       body{padding:12px}
+      .card{border-radius:0; box-shadow:none; padding:14px;}
+      .header{gap:10px; flex-wrap:wrap}
+      .header img{height:64px}
+      .sentence{padding:.85rem .8rem}
+      select{display:inline-flex; width:auto; min-width:9ch; max-width:16ch; margin:0 .15rem; font-size:.95em}
+    }
       .card{border-radius:0; box-shadow:none; padding:14px;}
       .header{gap:8px}
       .header img{height:32px}
